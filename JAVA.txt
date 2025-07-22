@@ -1,0 +1,30 @@
+import java.util.Scanner;
+
+public class SumEvenOdd {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Input range from the user
+        System.out.print("Enter the starting number of the range: ");
+        int start = scanner.nextInt();
+        System.out.print("Enter the ending number of the range: ");
+        int end = scanner.nextInt();
+
+        int sumEven = 0, sumOdd = 0;
+
+        // Loop through the range and calculate sums
+        for (int i = start; i <= end; i++) {
+            if (i % 2 == 0) {
+                sumEven += i; // Add to even sum
+            } else {
+                sumOdd += i; // Add to odd sum
+            }
+        }
+
+        // Display the results
+        System.out.println("Sum of even numbers: " + sumEven);
+        System.out.println("Sum of odd numbers: " + sumOdd);
+
+        scanner.close();
+    }
+}
