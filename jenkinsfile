@@ -1,31 +1,61 @@
 pipeline {
     agent any
 
+    environment {
+        // Example environment variable
+        APP_NAME = "MyApp"
+    }
+
     stages {
-        stage ('Package  App') {
+        stage('Checkout') {
             steps {
-                withMaven(maven : 'maven_3_5_0') {
-                    sh 'mvn clean compile'
+                checkout scm
+                echo "Checked out branch: ${env.BRANCH_NAME}"
+            }
+        }
+
+        stage('Build') {
+            steps {
+                script {
+                    if (env.BRANCH_NAME == 'main') {
+                        echo 'Building for production...'
+                        // Add your production build steps
+                    } else if (env.BRANCH_NAME == 'develop') {
+                        echo 'Building for development...'
+                        // Add your development build steps
+                    } else {
+                        echo "Building for feature branch: ${env.BRANCH_NAME}"
+                        // Add your feature branch build steps
+                    }
                 }
             }
         }
 
-        stage ('Testing Stage') {
-
+        stage('Test') {
             steps {
-                withMaven(maven : 'maven_3_5_0') {
-                    sh 'mvn test'
-                }
+                echo "Running tests..."
+                // Add test steps here
             }
         }
 
-
-        stage ('Deployment Stage') {
+        stage('Deploy') {
+            when {
+                branch 'main'
+            }
             steps {
-                withMaven(maven : 'maven_3_5_0') {
-                    sh 'mvn deploy'
-                }
+                echo "Deploying to production..."
+                // Add production deploy steps
             }
         }
     }
+
+    post {
+        always {
+            echo "Pipeline finished for branch: ${env.BRANCH_NAME}"
+        }
+        failure {
+            echo "Pipeline failed for branch: ${env.BRANCH_NAME}"
+        }
+    }
 }
+
